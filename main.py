@@ -1,32 +1,80 @@
+class Participant:
+  def __init__(self, name):
+    self.name = name
+    self.points = 0
+    self.choice = ""
+  def choose(self):
+    self.choice = input("{name}, select rock, paper or scissor: ".format(name= self.name))
+    print("{name} selects {choice}".format(name=self.name, choice = self.choice))
 
+class GameRound:
+  def __init__(self, p1, p2):
+    p1.choose()
+    p2.choose()
+  def compareChoices(self, p1, p2):
+    if p1.choice == "rock" and p2.choice == "scissor":
+      return 1
+    elif p1.choice == "paper" and p2.choice == "rock":
+      return 1
+    elif p1.choice == "scissor" and p2.choice == "paper":
+      return 1
+    elif p1.choice == "paper" and p2.choice == "scissor":
+      return -1
+    elif p1.choice == "scissor" and p2.choice == "rock":
+      return -1
+    elif p1.choice == "rock" and p2.choice == "paper":
+      return -1
+    elif p1.choice == "scissor" and p2.choice == "scissor":
+      return 0
+    elif p1.choice == "rock" and p2.choice == "rock":
+      return 0
+    elif p1.choice == "scissor" and p2.choice == "scissor":
+      return 0
+    else:
+        return 0
+    
+  # something else
 
-# print(colors)
-# print(type(colors))
+# and so on
+  def awardPoints(self):
+    print("implement")
 
-#print(f'0-based indexing into the list ... second item: {colors[1]}')
-
-#print(f'Last item of the list: {colors[6]}')
-
-#print(f'Next to last item in the list: {colors[-2]}')
-#colors = ['red', 'green', 'blue']
-#print(colors[2])
-import random
-masti = ["Hearts", "Spades", "Clubs", "Diamonds"]
-number = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
-deck = []
-
-for  suit in masti:
-  for rank in number:
-    deck.append(f'{rank} of {suit}')
-    print(f'There are {len(deck)} cards in the deck.')
-print('Dealing ...')
-hand = []
-while len(hand) < 5:
-  card = random.choice(deck)
-  deck.remove(card)
-  hand.append(card)
-
-print('Player has the following cards in their hand:')
-
-print(f'There are {len(deck)} cards in the deck.')
-print(hand)
+class Game:
+  def __init__(self):
+    self.endGame = False
+    self.participant = Participant("Spock")
+    self.secondParticipant = Participant("Kirk")
+  def determineWinner(self):
+    resultString = "It's a Draw"
+    if self.participant.points > self.secondParticipant.points:
+        resultString = "Winner is {name}".format(name=self.participant.name)
+    elif self.participant.points < self.secondParticipant.points:
+        resultString = "Winner is {name}".format(name=self.secondParticipant.name)
+    print(resultString)
+  def checkEndCondition(self):
+    answer = input("Continue game y/n")
+    if answer == 'y':
+      GameRound(self.participant, self.secondParticipant)
+      self.checkEndCondition()
+    else:
+      print("Game ended, {p1name} has {p1points}, and {p2name} has {p2points}".format(p1name = self.participant.name, p1points= self.participant.points, p2name=self.secondParticipant.name, p2points=self.secondParticipant.points))
+      self.determineWinner()
+      self.endGame = True  
+  def start(self):
+    while not self.endGame:
+      GameRound(self.participant, self.secondParticipant)
+      game_round = GameRound(self.participant, self.secondParticipant)
+      result = game_round.compareChoices(self.participant, self.secondParticipant)
+      self.checkEndCondition()
+    if result == 1:
+        self.participant.points += 1
+        print('Spock win')
+    elif result == -1:
+        self.secondParticipant.points += 1
+        print('kirk win')
+    else:
+            print('ничья')
+  def determineWinner(self):
+   print("")
+game = Game()
+game.start()
