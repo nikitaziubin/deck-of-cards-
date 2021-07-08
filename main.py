@@ -33,9 +33,6 @@ class GameRound:
     else:
         return 0
     
-  # something else
-
-# and so on
   def awardPoints(self):
     print("implement")
 
@@ -52,28 +49,32 @@ class Game:
         resultString = "Winner is {name}".format(name=self.secondParticipant.name)
     print(resultString)
   def checkEndCondition(self):
-    answer = input("Continue game y/n")
+    answer = input("Continue game y/n:")
     if answer == 'y':
-      GameRound(self.participant, self.secondParticipant)
-      self.checkEndCondition()
+      game_round = GameRound(self.participant, self.secondParticipant)
+      result = game_round.compareChoices(self.participant, self.secondParticipant)
+      if result == 1:
+        self.participant.points += 1
+        self.checkEndCondition()
+        print('Spock win')
+      elif result == -1:
+        self.secondParticipant.points += 1
+        self.checkEndCondition()
+        print('kirk win')
+      else:
+        self.checkEndCondition()
+        print('ничья')
+    
     else:
       print("Game ended, {p1name} has {p1points}, and {p2name} has {p2points}".format(p1name = self.participant.name, p1points= self.participant.points, p2name=self.secondParticipant.name, p2points=self.secondParticipant.points))
       self.determineWinner()
       self.endGame = True  
   def start(self):
-    while not self.endGame:
-      GameRound(self.participant, self.secondParticipant)
-      game_round = GameRound(self.participant, self.secondParticipant)
-      result = game_round.compareChoices(self.participant, self.secondParticipant)
-      self.checkEndCondition()
-    if result == 1:
-        self.participant.points += 1
-        print('Spock win')
-    elif result == -1:
-        self.secondParticipant.points += 1
-        print('kirk win')
-    else:
-            print('ничья')
+    while not self.endGame:      
+        self.checkEndCondition()
+      
+      
+    
   def determineWinner(self):
    print("")
 game = Game()
